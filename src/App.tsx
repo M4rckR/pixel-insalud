@@ -1,45 +1,37 @@
 import { useEffect } from 'react';
 
 export const App = () => {
-  const ENDPOINT = 'https://tu-api.com/endpoint/123';
-  const URL_DESTINO = 'https://www.google.com';
-
   useEffect(() => {
+    // Leer parámetros de la URL
+    const params = new URLSearchParams(window.location.search);
+    const adId = params.get('utm_content');
+    const phone = params.get('phone');
 
-    const ejecutarPostYRedirigir = async () => {
-      try {
+    console.log('Datos obtenidos:', { adId, phone });
 
-        const parametros = {
-          param1: 'valor1',
-          param2: 'valor2',
-          param3: 'valor3'
-        };
-        
-        const response = await fetch(ENDPOINT, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(parametros)
-        });
+    // Enviar datos al backend
+    fetch('https://tuservidor.com/api/tracking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        adId,
+        phone,
+        timestamp: new Date().toISOString(),
+      }),
+    });
 
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
+    // Redirigir a WhatsApp
+    // const whatsappUrl = `https://wa.me/${phone}`;
+    const redirectDelay = 100; // en milisegundos
 
-        const data = await response.json();
-        console.log('Respuesta del servidor:', data);
-        
-        window.location.href = URL_DESTINO;
-        
-      } catch (error) {
-        console.error('Error en la petición POST:', error);
-        window.location.href = URL_DESTINO;
-      }
-    };
+    const timer = setTimeout(() => {
+      // window.location.href = whatsappUrl;
+    }, redirectDelay);
 
-    ejecutarPostYRedirigir();
+    // Limpiar timeout en caso el componente se desmonte antes
+    return () => clearTimeout(timer);
   }, []);
+
 
   // Mensaje mientras se procesa (opcional - puedes cambiarlo o retornar null)
   return (
