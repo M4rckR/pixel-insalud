@@ -20,12 +20,13 @@ export const App = () => {
       }),
     });
 
-    // Redirigir a WhatsApp
-    // const whatsappUrl = `https://wa.me/${phone}`;
+    // Crear enlace personalizado a WhatsApp
+    const mensaje = encodeURIComponent("¡Hola! Me interesa obtener más información sobre sus servicios.");
+    const whatsappUrl = `https://wa.me/${phone}?text=${mensaje}`;
     const redirectDelay = 100; // en milisegundos
 
     const timer = setTimeout(() => {
-      // window.location.href = whatsappUrl;
+      window.location.href = whatsappUrl;
     }, redirectDelay);
 
     // Limpiar timeout en caso el componente se desmonte antes
