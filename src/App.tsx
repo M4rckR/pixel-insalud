@@ -5,24 +5,24 @@ export const App = () => {
     // Leer parámetros de la URL
     const params = new URLSearchParams(window.location.search);
     const adId = params.get('utm_content');
-    const phone = params.get('phone');
+    const phoneNumberManager = params.get('phoneNumberManager');
 
-    console.log('Datos obtenidos:', { adId, phone });
+    console.log('Datos obtenidos:', { adId, phoneNumberManager });
 
     // Enviar datos al backend
-    fetch('https://tuservidor.com/api/tracking', {
+    fetch('https://callhub.insalud.pe/api/meta/captureAdId', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         adId,
-        phone,
+        phoneNumberManager,
         timestamp: new Date().toISOString(),
       }),
     });
 
     // Crear enlace personalizado a WhatsApp
     const mensaje = encodeURIComponent("¡Hola! Me interesa obtener más información sobre sus servicios.");
-    const whatsappUrl = `https://wa.me/${phone}?text=${mensaje}`;
+    const whatsappUrl = `https://wa.me/${phoneNumberManager}?text=${mensaje}`;
     const redirectDelay = 100; // en milisegundos
 
     const timer = setTimeout(() => {
